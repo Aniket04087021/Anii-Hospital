@@ -11,7 +11,6 @@ const register = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [nic, setNic] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
@@ -20,11 +19,30 @@ const register = () => {
 
   const handleRegistration = async (e) => {
     e.preventDefault();
+    const payload = {
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      email: email.trim(),
+      phone: phone.toString().trim(),
+      dob,
+      gender,
+      password: password.trim(),
+    };
+
+    const missingFields = Object.entries(payload)
+      .filter(([, value]) => !value)
+      .map(([key]) => key);
+
+    if (missingFields.length) {
+      toast.error(`Please fill: ${missingFields.join(", ")}`);
+      return;
+    }
+
     try {
       await axios
         .post(
-          "http://localhost:4000/api/v1/user/patient/register",
-          { firstName, lastName, email, phone, nic, dob, gender, password },
+          "http://localhost:4002/api/v1/user/patient/register",
+          payload,
           {
             withCredentials: true,
             headers: { "Content-Type": "application/json" },
@@ -38,13 +56,12 @@ const register = () => {
           setLastName("");
           setEmail("");
           setPhone("");
-          setNic("");
           setDob("");
           setGender("");
           setPassword("");
         });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Registration failed.");
     }
   };
 
@@ -91,12 +108,6 @@ const register = () => {
             />
           </div>
           <div>
-            <input
-              type="number"
-              placeholder="NIC"
-              value={nic}
-              onChange={(e) => setNic(e.target.value)}
-            />
             <input
               type={"date"}
               placeholder="Date of Birth"

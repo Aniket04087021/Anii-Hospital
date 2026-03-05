@@ -8,7 +8,6 @@ const AppointmentForm = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [nic, setNic] = useState("");
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [appointmentDate, setAppointmentDate] = useState("");
@@ -33,12 +32,17 @@ const AppointmentForm = () => {
   const [doctors, setDoctors] = useState([]);
   useEffect(() => {
     const fetchDoctors = async () => {
-      const { data } = await axios.get(
-        "http://localhost:4000/api/v1/user/doctors",
-        { withCredentials: true }
-      );
-      setDoctors(data.doctors);
-      console.log(data.doctors);
+      try {
+        const { data } = await axios.get(
+          "http://localhost:4002/api/v1/user/doctors",
+          { withCredentials: true }
+        );
+        setDoctors(data.doctors);
+      } catch (error) {
+        toast.error(
+          error.response?.data?.message || "Unable to load doctors list."
+        );
+      }
     };
     fetchDoctors();
   }, []);
@@ -47,13 +51,12 @@ const AppointmentForm = () => {
     try {
       const hasVisitedBool = Boolean(hasVisited);
       const { data } = await axios.post(
-        "http://localhost:4000/api/v1/appointment/post",
+        "http://localhost:4002/api/v1/appointment/post",
         {
           firstName,
           lastName,
           email,
           phone,
-          nic,
           dob,
           gender,
           appointment_date: appointmentDate,
@@ -73,7 +76,6 @@ const AppointmentForm = () => {
         setLastName(""),
         setEmail(""),
         setPhone(""),
-        setNic(""),
         setDob(""),
         setGender(""),
         setAppointmentDate(""),
@@ -83,7 +85,9 @@ const AppointmentForm = () => {
         setHasVisited(""),
         setAddress("");
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(
+        error.response?.data?.message || "Unable to book appointment."
+      );
     }
   };
 
@@ -121,12 +125,6 @@ const AppointmentForm = () => {
             />
           </div>
           <div>
-            <input
-              type="number"
-              placeholder="NIC"
-              value={nic}
-              onChange={(e) => setNic(e.target.value)}
-            />
             <input
               type="date"
               placeholder="Date of Birth"

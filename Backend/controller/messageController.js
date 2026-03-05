@@ -1,5 +1,6 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { Message } from "../models/messageSchema.js";
+import ErrorHandler from "../middlewares/error.js";
 export const sendMessage = catchAsyncErrors(async (req,res,next) => {
     const {firstName,lastName,email,phone,message} = req.body;
     if(!firstName || !lastName || !email || !phone || !message) {
@@ -14,3 +15,25 @@ export const sendMessage = catchAsyncErrors(async (req,res,next) => {
 
     
 })
+
+export const getAllMessages = catchAsyncErrors(async (req, res) => {
+    const messages = await Message.find().sort({ _id: -1 });
+    res.status(200).json({
+        success: true,
+        messages,
+    });
+});
+
+export const deleteMessage = catchAsyncErrors(async (req, res, next) => {
+    const { id } = req.params;
+    const message = await Message.findById(id);
+    if (!message) {
+        return next(new ErrorHandler("Message not found.", 404));
+    }
+
+    await message.deleteOne();
+    res.status(200).json({
+        success: true,
+        message: "Message deleted successfully.",
+    });
+});

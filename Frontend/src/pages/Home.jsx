@@ -7,10 +7,12 @@ import MessageForm from '../components/MessageForm'
 const Home = () => {
   return (
     <>
-     <Hero title={"Welcome to AniiCare"} imageUrl={'/hero.png'}/>
-     <Biography imageUrl={"/about.png"}/>
-     <Departments/>
-     <MessageForm/> 
+      <div style={{ marginTop: "-80px" }}>
+        <Hero title={"Welcome to AniiCare"} imageUrl={'/hero.png'} />
+      </div>
+      <Biography imageUrl={"/about.png"} />
+      <Departments />
+      <MessageForm />
     </>
   )
 }

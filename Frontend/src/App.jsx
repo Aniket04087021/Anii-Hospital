@@ -6,6 +6,8 @@ import Appointment from './pages/Appointment';
 import AboutUs from './pages/AboutUs';
 import Register from './pages/register';
 import Login from './pages/login';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminLogin from './pages/AdminLogin';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
@@ -26,6 +28,8 @@ const App = () => {
           <Route path='/about' element={<AboutUs/>}/>
           <Route path='/register' element={<Register/>}/>
           <Route path='/login' element={<Login/>}/>
+          <Route path='/admin/login' element={<AdminLogin/>}/>
+          <Route path='/admin' element={<AdminDashboard/>}/>
         </Routes>
         <ToastContainer position='top-center'/>
       </Router>
